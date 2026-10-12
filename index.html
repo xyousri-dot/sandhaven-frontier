@@ -430,7 +430,7 @@ const storeFor=key=>document.body.dataset.platform==='crazygames'&&cloudKeys.has
 const read=(key,fallback)=>{try{return JSON.parse(storeFor(key).getItem(KEY+key))??fallback;}catch{return fallback;}};
 let saveFailure=false;const write=(key,value)=>{try{storeFor(key).setItem(KEY+key,JSON.stringify(value));return true;}catch{saveFailure=true;return false;}};
 const restored=Checkpoint.restore(read('campaign',null));
-const requestedLocale=document.body.dataset.platform==='crazygames'?String(globalThis.CrazyGames?.SDK?.user?.systemInfo?.locale||'en').toLowerCase().split('-')[0]:'nl';
+let requestedLocale='nl';if(document.body.dataset.platform==='crazygames'){try{requestedLocale=String(globalThis.CrazyGames?.SDK?.user?.systemInfo?.locale||'en').toLowerCase().split('-')[0];}catch{requestedLocale='en';}}
 let campaign=restored?.campaign||Engine.createCampaign(),lang=read('lang',COPY[requestedLocale]?requestedLocale:'en');if(!COPY[lang])lang='en';
 let view=restored?.battle?'battle':'home',battle=restored?.battle||null,result=null,paused=!!restored?.battle,mode='select',selectedId=null,placement=null,movingId=null,selectedMission=campaign.missions.find(m=>m.unlocked&&!m.wins)?.id??0,hover=null,cursor={x:6.5,y:6.5},renderer=null,notice='',zoom=1,panX=0,panY=0,lastTime=0,hudTime=0,busy=false;
 let allow=read('metrics',false)===true,events=read('events',[]),cosmetic=read('nightflag',false)===true;
